@@ -23,12 +23,6 @@ const Signup = () => {
     return (
         <VStack color="black">
              <Fieldset.Root size="lg" maxW="md">
-            <Stack>
-                <Fieldset.Legend>Personal information</Fieldset.Legend>
-                <Fieldset.HelperText>
-                Please provide your information below.
-                </Fieldset.HelperText>
-            </Stack>
 
             <Fieldset.Content>
                 <Field label="Name">
@@ -73,7 +67,7 @@ const Signup = () => {
             </Fieldset.Content>
 
             </Fieldset.Root>
-            <Button type="submit"  _hover={{ bg: "blue.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler}>
+            <Button type="submit" bg="blue.500" _hover={{ bg: "blue.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler}>
                 Sign Up
             </Button>
         </VStack>
