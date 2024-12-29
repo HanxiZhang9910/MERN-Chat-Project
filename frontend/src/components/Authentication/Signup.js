@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { Button, Fieldset, Input, Stack } from "@chakra-ui/react"
 import { Field } from "../ui/field"
 
+// test
 const postDetails = (pics) => {
 
 }
