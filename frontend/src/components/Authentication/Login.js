@@ -1,20 +1,69 @@
 import { VStack } from '@chakra-ui/react'
-
 import React, { useState } from 'react'
-
 import { Button, Fieldset, Input, Stack } from "@chakra-ui/react"
 import { Field } from "../ui/field"
+import { createToaster } from "@chakra-ui/react";
+import axios from "axios";
+import { useHistory } from "react-router-dom"
 
-const submitHandler = () => {
+const toaster = createToaster();
 
-}
+
+
 
 const Login = () => {
-   const [name, setName] = useState()
     const [password, setPassword] = useState()
-    const [confirmpassword, setConfirmpassword] = useState()
-    const [pic, setPic] = useState()
     const [email, setEmail] = useState()
+    const [loading, setLoading] = useState(false)
+    const history = useHistory();
+    
+    const submitHandler = async () => {
+        setLoading(true);
+        if (!email || !password) {
+            toaster.create({
+                title: "Please Fill all the fields!",
+                status: "warning", // options: "success", "error", "warning", "info"
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+            });
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                },
+            };
+
+            const { data } = await axios.post(
+                "/api/user/login",
+                { email, password },
+                config
+            );
+            toaster.create({
+                title: "Login Successful",
+                status: "success", 
+                duration: 5000,  
+                isClosable: true,
+                position: "bottom", 
+            });
+            localStorage.setItem("userInfo", JSON.stringify(data));
+            setLoading(false);
+            history.push("/chats");
+        } catch (error) {
+            toaster.create({
+                title: "Error Occured!",
+                status: "error", 
+                duration: 5000,  
+                isClosable: true,
+                position: "bottom", 
+            });
+            setLoading(false);
+        }
+    }
 
     return (
         <VStack color="black">
@@ -26,6 +75,7 @@ const Login = () => {
                         placeholder='Enter Your Email'
                         type="email"
                         required
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}/>
                 </Field>
                     
@@ -34,13 +84,14 @@ const Login = () => {
                         placeholder='Enter Your Password'
                         type="password"
                         required
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)}/>
                 </Field>
                     
             </Fieldset.Content>
 
             </Fieldset.Root>
-            <Button type="submit" bg="green.500" _hover={{ bg: "green.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler}>
+            <Button type="submit" bg="green.500" _hover={{ bg: "green.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler} isLoading={loading}>
                 Login
             </Button>
 
