@@ -1,18 +1,12 @@
 import { VStack } from '@chakra-ui/react'
-
 import React, { useState } from 'react'
-
 import { Button, Fieldset, Input, Stack } from "@chakra-ui/react"
 import { Field } from "../ui/field"
+import { createToaster } from "@chakra-ui/react";
+import axios from "axios";
+import { useHistory } from "react-router-dom"
 
-// test
-const postDetails = (pics) => {
-
-}
-
-const submitHandler = () => {
-
-}
+const toaster = createToaster();
 
 const Signup = () => {
     const [name, setName] = useState()
@@ -20,6 +14,109 @@ const Signup = () => {
     const [confirmpassword, setConfirmpassword] = useState()
     const [pic, setPic] = useState()
     const [email, setEmail] = useState()
+    const [loading, setLoading] = useState(false)
+    const history = useHistory();
+    
+    // test
+    const postDetails = (pics) => {
+        setLoading(true)
+        if (pics === undefined) {
+              toaster.create({
+                title: "Please Select an Image!",
+                description: "If the user has not selected an image, notify the user.",
+                status: "warning", // options: "success", "error", "warning", "info"
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+              });
+            return;
+        }
+
+        if (pics.type === "image/jpeg" || pics.type === "image/png") {
+            const data = new FormData();
+            data.append("file", pics);
+            data.append("upload_preset", "chat-app-preset");
+            data.append("cloud_name", "ddlzkytvf")
+            fetch("https://api.cloudinary.com/v1_1/ddlzkytvf/image/upload", {
+                method: "post",
+                body: data,
+            }).then((res) => res.json())
+                .then((data) => {
+                    setPic(data.url.toString());
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                    setLoading(false);
+                });
+        } else {
+            toaster.create({
+                title: "Please Select an Image!",
+                description: "If the user has not selected an image, notify the user.",
+                status: "warning", // options: "success", "error", "warning", "info"
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+            });
+            setLoading(false);
+            return;
+        }
+    };
+
+    const submitHandler = async () => {
+        setLoading(true);
+        if (!name || !email || !password || !confirmpassword) {
+            toaster.create({
+                title: "Please Fill all the Fields!",
+                description: "If the user has not filled all the fields, notify the user.",
+                status: "warning", // options: "success", "error", "warning", "info"
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+            });
+            setLoading(false);
+            return;
+        }
+        if (password != confirmpassword) {
+            toaster.create({
+                title: "Password Do Not Match",
+                status: "warning", // options: "success", "error", "warning", "info"
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+            });
+            return;
+        }
+        try {
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                },
+            };
+            const { data } = await axios.post("/api/user", { name, email, password, pic }, config);
+            toaster.create({
+                title: "Registration Successful",
+                status: "success", // options: "success", "error", "warning", "info"
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+            });
+    
+            localStorage.setItem("userInfo", JSON.stringify(data));
+            setLoading(false)
+            history.push("chats")
+        } catch (error) {
+            toaster.create({
+                title: "Error Occured",
+                description: error.response.data.message,
+                status: "error",
+                duration: 5000,  // duration in ms
+                isClosable: true,
+                position: "bottom", // options: "top", "top-right", "bottom", etc.
+            });
+            setLoading(false);
+        }
+    }
 
     return (
         <VStack color="black">
@@ -68,7 +165,13 @@ const Signup = () => {
             </Fieldset.Content>
 
             </Fieldset.Root>
-            <Button type="submit" bg="blue.500" _hover={{ bg: "blue.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler}>
+            <Button type="submit"
+                bg="blue.500"
+                _hover={{ bg: "blue.600" }}
+                colorScheme="blue"
+                alignSelf="center" width="100%"
+                onClick={submitHandler}
+                isLoading={loading}>
                 Sign Up
             </Button>
         </VStack>
