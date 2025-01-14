@@ -8,26 +8,24 @@ import { useHistory } from "react-router-dom"
 
 const toaster = createToaster();
 
-
-
-
 const Login = () => {
     const [password, setPassword] = useState()
     const [email, setEmail] = useState()
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const history = useHistory();
     
     const submitHandler = async () => {
-        setLoading(true);
+        // setLoading(true);
         if (!email || !password) {
-            toaster.create({
-                title: "Please Fill all the fields!",
-                status: "warning", // options: "success", "error", "warning", "info"
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-            });
-            setLoading(false);
+            alert("Please Fill all the fields!")
+            // toaster.create({
+            //     title: "Please Fill all the fields!",
+            //     status: "warning", // options: "success", "error", "warning", "info"
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            // });
+            // setLoading(false);
             return;
         }
 
@@ -43,25 +41,21 @@ const Login = () => {
                 { email, password },
                 config
             );
-            toaster.create({
-                title: "Login Successful",
-                status: "success", 
-                duration: 5000,  
-                isClosable: true,
-                position: "bottom", 
-            });
+            alert("Login successful")
+            // toaster.create({
+            //     title: "Login Successful",
+            //     status: "success", 
+            //     duration: 5000,  
+            //     isClosable: true,
+            //     position: "bottom", 
+            // });
             localStorage.setItem("userInfo", JSON.stringify(data));
-            setLoading(false);
+            // setLoading(false);
             history.push("/chats");
         } catch (error) {
-            toaster.create({
-                title: "Error Occured!",
-                status: "error", 
-                duration: 5000,  
-                isClosable: true,
-                position: "bottom", 
-            });
-            setLoading(false);
+            alert("Please input valid credentials!")
+            console.log("Please input valid credentials!")
+            // setLoading(false);
         }
     }
 
@@ -91,7 +85,7 @@ const Login = () => {
             </Fieldset.Content>
 
             </Fieldset.Root>
-            <Button type="submit" bg="green.500" _hover={{ bg: "green.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler} isLoading={loading}>
+            <Button type="submit" bg="green.500" _hover={{ bg: "green.600" }} colorScheme="blue" alignSelf="center" width="100%" onClick={submitHandler} >
                 Login
             </Button>
 

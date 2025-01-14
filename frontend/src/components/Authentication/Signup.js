@@ -14,21 +14,22 @@ const Signup = () => {
     const [confirmpassword, setConfirmpassword] = useState()
     const [pic, setPic] = useState()
     const [email, setEmail] = useState()
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const history = useHistory();
     
     // test
     const postDetails = (pics) => {
-        setLoading(true)
+        //setLoading(true)
         if (pics === undefined) {
-              toaster.create({
-                title: "Please Select an Image!",
-                description: "If the user has not selected an image, notify the user.",
-                status: "warning", // options: "success", "error", "warning", "info"
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-              });
+            alert("Please select a valid image")
+            //   toaster.create({
+            //     title: "Please Select an Image!",
+            //     description: "If the user has not selected an image, notify the user.",
+            //     status: "warning", // options: "success", "error", "warning", "info"
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            //   });
             return;
         }
 
@@ -43,48 +44,51 @@ const Signup = () => {
             }).then((res) => res.json())
                 .then((data) => {
                     setPic(data.url.toString());
-                    setLoading(false);
+                   // setLoading(false);
                 })
                 .catch((err) => {
                     console.log(err);
-                    setLoading(false);
+                   // setLoading(false);
                 });
         } else {
-            toaster.create({
-                title: "Please Select an Image!",
-                description: "If the user has not selected an image, notify the user.",
-                status: "warning", // options: "success", "error", "warning", "info"
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-            });
-            setLoading(false);
+            alert("Please select an image")
+            // toaster.create({
+            //     title: "Please Select an Image!",
+            //     description: "If the user has not selected an image, notify the user.",
+            //     status: "warning", // options: "success", "error", "warning", "info"
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            // });
+            //setLoading(false);
             return;
         }
     };
 
     const submitHandler = async () => {
-        setLoading(true);
+       // setLoading(true);
         if (!name || !email || !password || !confirmpassword) {
-            toaster.create({
-                title: "Please Fill all the Fields!",
-                description: "If the user has not filled all the fields, notify the user.",
-                status: "warning", // options: "success", "error", "warning", "info"
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-            });
-            setLoading(false);
+            alert("Please Fill all the Fields!")
+            // toaster.create({
+            //     title: "Please Fill all the Fields!",
+            //     description: "If the user has not filled all the fields, notify the user.",
+            //     status: "warning", // options: "success", "error", "warning", "info"
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            // });
+            //setLoading(false);
             return;
         }
         if (password != confirmpassword) {
-            toaster.create({
-                title: "Password Do Not Match",
-                status: "warning", // options: "success", "error", "warning", "info"
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-            });
+            alert("Password Do Not Match")
+            // toaster.create({
+            //     title: "Password Do Not Match",
+            //     status: "warning", // options: "success", "error", "warning", "info"
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            // });
             return;
         }
         try {
@@ -94,27 +98,29 @@ const Signup = () => {
                 },
             };
             const { data } = await axios.post("/api/user", { name, email, password, pic }, config);
-            toaster.create({
-                title: "Registration Successful",
-                status: "success", // options: "success", "error", "warning", "info"
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-            });
+            alert("Registration Successful")
+            // toaster.create({
+            //     title: "Registration Successful",
+            //     status: "success", // options: "success", "error", "warning", "info"
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            // });
     
             localStorage.setItem("userInfo", JSON.stringify(data));
-            setLoading(false)
+            // setLoading(false)
             history.push("chats")
         } catch (error) {
-            toaster.create({
-                title: "Error Occured",
-                description: error.response.data.message,
-                status: "error",
-                duration: 5000,  // duration in ms
-                isClosable: true,
-                position: "bottom", // options: "top", "top-right", "bottom", etc.
-            });
-            setLoading(false);
+            alert(error)
+            // toaster.create({
+            //     title: "Error Occured",
+            //     description: error.response.data.message,
+            //     status: "error",
+            //     duration: 5000,  // duration in ms
+            //     isClosable: true,
+            //     position: "bottom", // options: "top", "top-right", "bottom", etc.
+            // });
+            // setLoading(false);
         }
     }
 
@@ -170,8 +176,7 @@ const Signup = () => {
                 _hover={{ bg: "blue.600" }}
                 colorScheme="blue"
                 alignSelf="center" width="100%"
-                onClick={submitHandler}
-                isLoading={loading}>
+                onClick={submitHandler}>
                 Sign Up
             </Button>
         </VStack>
